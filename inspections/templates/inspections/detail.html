@@ -1,0 +1,25 @@
+{% extends "inspections/base.html" %}
+{% block title %} - Inspection {{ insp.pk }}{% endblock %}
+{% block content %}
+<h1>Inspection #{{ insp.pk }}</h1>
+<p class="mute">{{ insp.created_at|date:"d M Y, H:i" }} &middot; {{ insp.model_name }} &middot; {{ insp.inference_ms|floatformat:0 }} ms on CPU</p>
+{% if "NOT defect-trained" in insp.model_name %}<div class="warn">A generic model is running. Copy your Colab-trained <code>best.pt</code> into <code>ml/weights/</code> to detect real steel defects.</div>{% endif %}
+<div class="row">
+  <div><p class="mute" style="margin:0 0 6px">Original</p><div class="scan"><img src="{{ insp.image.url }}" alt="Original"></div></div>
+  <div><p class="mute" style="margin:0 0 6px">Detected</p><div class="scan">{% if insp.annotated_image %}<img src="{{ insp.annotated_image.url }}" alt="Detections">{% endif %}</div></div>
+</div>
+<div class="panel" style="margin-top:22px"><h3>Defects found ({{ insp.detections.count }})</h3>
+<table><thead><tr><th>Type</th><th>Confidence</th><th>Is it correct?</th></tr></thead><tbody>
+{% for d in insp.detections.all %}<tr>
+<td><span class="dot" data-cls="{{ d.label }}"></span>{{ d.label }}</td>
+<td><div class="bar" style="max-width:160px"><b style="width:{% widthratio d.confidence 1 100 %}%"></b></div><span class="mute" style="font-size:12px">{% widthratio d.confidence 1 100 %}%</span></td>
+<td><form method="post" action="{% url 'review' d.pk %}" class="seg">{% csrf_token %}
+<button name="review" value="correct" class="ok {% if d.review == 'correct' %}on{% endif %}">Yes</button>
+<button name="review" value="false_positive" class="bad {% if d.review == 'false_positive' %}on{% endif %}">No</button></form></td></tr>
+{% empty %}<tr><td colspan="3" class="empty">No defects above the confidence threshold. The surface looks clean to the model.</td></tr>{% endfor %}
+</tbody></table>
+<form method="post" action="{% url 'set_missed' insp.pk %}" style="margin-top:16px">{% csrf_token %}
+<label class="mute">Defects the model missed </label>
+<input type="number" min="0" name="missed_count" value="{{ insp.missed_count }}" style="width:80px" onchange="this.form.submit()"></form></div>
+<a class="btn ghost" href="{% url 'upload' %}">Inspect another image</a>
+{% endblock %}

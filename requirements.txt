@@ -1,0 +1,12 @@
+Django>=5.0,<5.3
+djangorestframework>=3.15
+ultralytics>=8.3
+opencv-python-headless>=4.9
+Pillow>=10.0
+numpy>=1.26
+python-dotenv>=1.0
+whitenoise>=6.6
+gunicorn>=22.0
+dj-database-url>=2.1
+pytest>=8.0
+pytest-django>=4.8

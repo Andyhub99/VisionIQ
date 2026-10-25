@@ -1,0 +1,31 @@
+{% extends "inspections/base.html" %}
+{% block title %} - Inspect{% endblock %}
+{% block content %}
+<h1>Inspect an image</h1>
+<p class="mute">Drop a steel surface photo (JPEG, PNG or BMP, up to 8 MB). Results take a few seconds.</p>
+<form method="post" enctype="multipart/form-data" id="f">{% csrf_token %}
+<label class="drop" id="drop" for="file">
+  <div class="scan" id="pv" hidden><img id="img" alt="Preview"></div>
+  <div id="hint"><b>Drag an image here</b><br><span class="mute">or click to choose a file</span></div>
+</label>
+<input type="file" id="file" name="image" accept="image/png,image/jpeg,image/bmp" required hidden>
+<button class="btn" id="go" disabled>Find defects</button>
+</form>
+<style>
+.drop{display:grid;place-items:center;min-height:300px;max-width:520px;margin-bottom:18px;border:2px dashed var(--line);border-radius:var(--r);background:var(--panel);cursor:pointer;text-align:center;transition:.2s;padding:16px}
+.drop:hover,.drop.over{border-color:var(--amber);background:var(--panel2)}
+.drop .scan{width:100%;max-width:380px}
+#go:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+</style>
+{% endblock %}
+{% block scripts %}
+<script>
+var file=document.getElementById('file'),drop=document.getElementById('drop'),go=document.getElementById('go');
+function show(f){if(!f)return;var r=new FileReader();r.onload=function(e){img.src=e.target.result;pv.hidden=false;hint.hidden=true;go.disabled=false};r.readAsDataURL(f)}
+file.addEventListener('change',function(){show(file.files[0])});
+['dragover','dragenter'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('over')})});
+['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(){drop.classList.remove('over')})});
+drop.addEventListener('drop',function(e){e.preventDefault();if(e.dataTransfer.files.length){file.files=e.dataTransfer.files;show(file.files[0])}});
+document.getElementById('f').addEventListener('submit',function(){pv.classList.add('loop');go.textContent='Scanning surface...';go.disabled=true});
+</script>
+{% endblock %}

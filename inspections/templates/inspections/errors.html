@@ -1,0 +1,17 @@
+{% extends "inspections/base.html" %}
+{% block title %} - Review errors{% endblock %}
+{% block content %}
+<h1>Review errors</h1>
+<p class="mute">Find where the model struggles. Lowest confidence first. {{ missed_total }} missed defect{{ missed_total|pluralize }} logged so far.</p>
+<form method="get" class="filters panel">
+<select name="label" onchange="this.form.submit()"><option value="">All types</option>{% for l in labels %}<option {% if sel.label == l %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+<select name="review" onchange="this.form.submit()"><option value="">Any status</option>{% for v,n in review_choices %}<option value="{{ v }}" {% if sel.review == v %}selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+<input name="max_conf" value="{{ sel.max_conf }}" size="6" placeholder="Max confidence, e.g. 0.5" onchange="this.form.submit()">
+</form>
+<div class="panel"><table><thead><tr><th>Inspection</th><th>Type</th><th>Confidence</th><th>Status</th></tr></thead><tbody>
+{% for d in detections %}<tr><td><a href="{% url 'detail' d.inspection_id %}">#{{ d.inspection_id }}</a></td>
+<td><span class="dot" data-cls="{{ d.label }}"></span>{{ d.label }}</td>
+<td>{% widthratio d.confidence 1 100 %}%</td><td><span class="chip {{ d.review }}">{{ d.get_review_display }}</span></td></tr>
+{% empty %}<tr><td colspan="4" class="empty">No detections match these filters.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VisionIQ{% block title %}{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1a22;--panel:#15252f;--panel2:#1b2f3b;--line:#2a4150;--ink:#e6eef2;--mute:#8aa3b1;
+--amber:#ffb43a;--mint:#4ad8b0;--rust:#ff6b57;--r:14px;
+--head:"Barlow Semi Condensed","Segoe UI",sans-serif;--body:"IBM Plex Sans","Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 var(--body);color:var(--ink);background:
+radial-gradient(900px 500px at 85% -10%,#1d3a4a55,transparent),var(--bg);min-height:100vh}
+h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:.01em;margin:0 0 .4em}
+h1{font-size:34px}h2{font-size:24px}h3{font-size:19px}
+a{color:var(--amber)}
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:26px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;background:#0b151cdd}
+.brand{display:flex;align-items:center;gap:10px;font:700 24px var(--head);margin-bottom:22px}
+.brand i{width:26px;height:26px;border-radius:7px;border:2px solid var(--amber);position:relative;display:block}
+.brand i::after{content:"";position:absolute;left:3px;right:3px;top:50%;height:2px;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:sweep 3.2s ease-in-out infinite alternate}
+@keyframes sweep{from{top:18%}to{top:78%}}
+aside a.nav{color:var(--mute);text-decoration:none;padding:10px 12px;border-radius:10px;transition:.2s}
+aside a.nav:hover{background:var(--panel);color:var(--ink)}
+aside a.nav.on{background:var(--panel2);color:var(--ink);box-shadow:inset 3px 0 var(--amber)}
+.side-foot{margin-top:auto;font-size:13px;display:flex;gap:14px}
+.side-foot a{color:var(--mute)}
+main{padding:34px clamp(16px,4vw,48px);max-width:1180px;width:100%}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:22px}
+.row{display:flex;gap:22px;flex-wrap:wrap}.row>*{flex:1 1 320px;min-width:0}
+.mute{color:var(--mute)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;margin:6px 0 28px}
+.kpis div{padding:4px 28px 4px 0;margin-right:28px;border-right:1px solid var(--line)}
+.kpis div:last-child{border:0}
+.kpi{font:700 52px/1 var(--head);color:var(--ink)}
+.kpi-l{color:var(--mute);margin-top:4px}
+.btn,button{font:500 15px var(--body);background:var(--amber);color:#1a1100;border:0;border-radius:10px;padding:10px 20px;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .15s,box-shadow .15s}
+.btn:hover,button:hover{transform:translateY(-1px);box-shadow:0 6px 18px #ffb43a40}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+table{width:100%;border-collapse:collapse}
+th{font-weight:500;color:var(--mute);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+td{padding:11px 10px;border-bottom:1px solid #22384633;vertical-align:middle}
+tbody tr{transition:background .15s}tbody tr:hover{background:var(--panel2)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c,var(--amber));margin-right:8px}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;min-width:90px}
+.bar b{display:block;height:100%;background:var(--c,var(--mint));border-radius:9px;transform-origin:left;animation:grow .9s ease-out both}
+@keyframes grow{from{transform:scaleX(0)}}
+.chip{padding:2px 10px;border-radius:99px;font-size:12px;background:var(--panel2);color:var(--mute)}
+.chip.correct{background:#4ad8b022;color:var(--mint)}.chip.false_positive{background:#ff6b5722;color:var(--rust)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:transparent;color:var(--mute);border-radius:0;padding:6px 12px;box-shadow:none;transform:none}
+.seg button:hover{background:var(--panel2);box-shadow:none;transform:none}
+.seg button.on.ok{background:var(--mint);color:#04241b}.seg button.on.bad{background:var(--rust);color:#2b0700}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;display:block;border:1px solid var(--line)}
+.tile img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.tile:hover img{transform:scale(1.07)}
+.tile span{position:absolute;left:8px;bottom:8px;background:#0b151ccc;border-radius:99px;padding:2px 10px;font-size:12px}
+.scan{position:relative;overflow:hidden;border-radius:12px;border:1px solid var(--line);background:#000}
+.scan img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;image-rendering:auto}
+.scan::after{content:"";position:absolute;left:0;right:0;height:70px;top:-70px;background:linear-gradient(transparent,#ffb43a55 85%,#ffb43a);border-bottom:2px solid var(--amber);animation:beam 1.6s ease-in-out .15s 1 both;pointer-events:none}
+.scan.loop::after{animation-iteration-count:infinite}
+@keyframes beam{0%{top:-70px;opacity:1}100%{top:100%;opacity:0}}
+.msg{background:#ff6b5722;border:1px solid var(--rust);color:#ffc9c0;padding:10px 14px;border-radius:10px;margin-bottom:16px}
+.warn{background:#ffb43a1f;border:1px solid #ffb43a66;color:var(--amber);padding:10px 14px;border-radius:10px;margin-bottom:16px}
+input,select{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.empty{padding:34px;text-align:center;color:var(--mute)}
+.page{animation:rise .5s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+@media (max-width:820px){
+.shell{grid-template-columns:1fr}
+aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px 14px;border:0;border-bottom:1px solid var(--line)}
+.brand{margin:0 10px 0 0}.side-foot{margin:0 0 0 auto}
+.kpis div{border:0;padding:0}.kpi{font-size:40px}}
+@media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+  <div class="brand"><i></i>VisionIQ</div>
+  <a class="nav {% if request.resolver_match.url_name == 'dashboard' %}on{% endif %}" href="{% url 'dashboard' %}">Overview</a>
+  <a class="nav {% if request.resolver_match.url_name == 'upload' %}on{% endif %}" href="{% url 'upload' %}">Inspect an image</a>
+  <a class="nav {% if request.resolver_match.url_name == 'errors' %}on{% endif %}" href="{% url 'errors' %}">Review errors</a>
+  <div class="side-foot"><a href="{% url 'export_csv' %}">CSV</a><a href="/api/">API</a></div>
+</aside>
+<main class="page">
+{% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+</div>
+<script>
+// give each defect class a stable colour
+document.querySelectorAll('[data-cls]').forEach(function(el){
+  var s=el.dataset.cls,h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;
+  el.style.setProperty('--c','hsl('+h+' 75% 62%)');
+});
+// count-up numbers
+document.querySelectorAll('[data-n]').forEach(function(el){
+  var n=+el.dataset.n,t0=null;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches||n===0){el.textContent=n;return}
+  (function step(t){t0=t0||t;var p=Math.min((t-t0)/900,1);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)})(performance.now());
+});
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

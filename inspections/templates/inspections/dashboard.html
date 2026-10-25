@@ -1,0 +1,42 @@
+{% extends "inspections/base.html" %}
+{% block content %}
+<h1>Surface inspection overview</h1>
+<p class="mute">Every image you inspect is stored here, so you can see which defect types the model finds, and how sure it is.</p>
+<div class="kpis">
+  <div><div class="kpi" data-n="{{ total_inspections }}">0</div><div class="kpi-l">Images inspected</div></div>
+  <div><div class="kpi" data-n="{{ total_detections }}">0</div><div class="kpi-l">Defects found</div></div>
+  <div><div class="kpi" data-n="{{ reviewed }}">0</div><div class="kpi-l">Checked by a person</div></div>
+</div>
+<div class="row">
+  <div class="panel"><h3>Defects by type</h3><canvas id="c1" height="210"></canvas></div>
+  <div class="panel"><h3>Model confidence by type</h3><canvas id="c2" height="210"></canvas></div>
+</div>
+<div class="panel"><h3>Defect types</h3>
+<table><thead><tr><th>Type</th><th>Found</th><th>Avg. confidence</th><th>Confirmed</th><th>False alarms</th></tr></thead><tbody>
+{% for s in stats %}<tr><td><span class="dot" data-cls="{{ s.label }}"></span>{{ s.label }}</td><td>{{ s.total }}</td>
+<td><div class="bar" data-cls="{{ s.label }}"><b style="width:{% widthratio s.avg_conf 1 100 %}%"></b></div></td>
+<td>{{ s.correct }}</td><td>{{ s.false_pos }}</td></tr>
+{% empty %}<tr><td colspan="5" class="empty">Nothing here yet. <a href="{% url 'upload' %}">Inspect your first image.</a></td></tr>{% endfor %}
+</tbody></table>
+<p class="mute" style="font-size:13px;margin:12px 0 0">Confirmed and false-alarm counts come only from detections you reviewed. Official mAP and recall come from the Colab evaluation in <code>ml/</code>.</p></div>
+{% if recent %}<div class="panel"><h3>Latest inspections</h3>
+<div class="gallery">{% for i in recent %}<a class="tile" href="{% url 'detail' i.pk %}">
+{% if i.annotated_image %}<img src="{{ i.annotated_image.url }}" alt="Inspection {{ i.pk }}">{% endif %}<span>{{ i.n }} found</span></a>{% endfor %}</div></div>{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+{{ chart_labels|json_script:"labels" }}{{ chart_counts|json_script:"counts" }}{{ chart_conf|json_script:"conf" }}
+<script>
+if(window.Chart){
+var L=JSON.parse(document.getElementById('labels').textContent),
+C=JSON.parse(document.getElementById('counts').textContent),
+F=JSON.parse(document.getElementById('conf').textContent);
+Chart.defaults.color='#8aa3b1';Chart.defaults.font.family='IBM Plex Sans';
+Chart.defaults.borderColor='#2a4150';Chart.defaults.animation.duration=1000;
+var cols=L.map(function(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return 'hsl('+h+' 75% 62%)'});
+var opt={plugins:{legend:{display:false}},borderRadius:8};
+new Chart(c1,{type:'bar',data:{labels:L,datasets:[{data:C,backgroundColor:cols}]},options:opt});
+new Chart(c2,{type:'bar',data:{labels:L,datasets:[{data:F,backgroundColor:cols}]},options:Object.assign({scales:{y:{min:0,max:1}}},opt)});
+}
+</script>
+{% endblock %}
