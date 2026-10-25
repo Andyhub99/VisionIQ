@@ -110,8 +110,6 @@ The trained model is stored locally at `ml/weights/best.pt`. Model weights shoul
 
 The project is designed to work with NEU-DET, a dataset of steel-surface defects. Check the dataset's license and cite the original source when distributing or presenting work based on it.
 
-<<<<<<< HEAD
-=======
 
 ## Screenshots
 
@@ -130,7 +128,6 @@ The project is designed to work with NEU-DET, a dataset of steel-surface defects
 ### Inspect Image
 ![VisionIQ model metrics](docs/screenshots/Inspect.png)
 
->>>>>>> 20caa41 (Add VisionIQ screenshots and model metrics)
 ## Future Improvements
 
 - Add authentication and role-based access
