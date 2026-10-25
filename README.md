@@ -73,30 +73,42 @@ Follow the commands and dataset paths documented in the training scripts. Keep d
 
 The application may use a fallback model when the fine-tuned weights are unavailable. Verify the configured model path and application behavior before relying on inspection results.
 
-## Evaluation Results
+## Model Evaluation
 
-Evaluation metrics will be added after running the experiments on a held-out test set.
+VisionIQ uses a fine-tuned YOLOv8n model trained on the NEU-DET steel surface defect dataset.
+
+### Held-out Test Results
+
+The model was evaluated on 270 held-out test images containing 606 annotated defect instances.
 
 | Metric | Result |
-|---|---|
-| mAP@0.5 | Pending evaluation |
-| Precision | Pending evaluation |
-| Recall | Pending evaluation |
-| Weakest-performing class | Pending evaluation |
-| Robustness under image corruption | Pending evaluation |
+|---|---:|
+| Precision | 70.98% |
+| Recall | 67.16% |
+| mAP@50 | 71.94% |
+| mAP@50–95 | 41.85% |
 
-No performance figures are claimed until they have been measured.
+### Per-Class mAP@50
+
+| Defect Class | mAP@50 |
+|---|---:|
+| Crazing | 35.11% |
+| Inclusion | 78.93% |
+| Patches | 95.09% |
+| Pitted Surface | 82.98% |
+| Rolled-in Scale | 46.94% |
+| Scratches | 92.56% |
+
+### Limitations
+
+Performance varies by defect category. Patches and scratches achieved the strongest results, while crazing and rolled-in scale require further improvement. These results apply to the held-out NEU-DET test split and do not guarantee equivalent performance in real-world industrial environments.
+
+The trained model is stored locally at `ml/weights/best.pt`. Model weights should not be committed to GitHub by default.
+
 
 ## Dataset
 
 The project is designed to work with NEU-DET, a dataset of steel-surface defects. Check the dataset's license and cite the original source when distributing or presenting work based on it.
-
-## Limitations
-
-- Performance depends on the trained model, dataset quality, and evaluation methodology.
-- A model trained on one surface type may not generalize to other materials or inspection environments.
-- Human review is important when predictions are uncertain.
-- Authentication, production storage, and deployment security must be addressed before real-world use.
 
 ## Future Improvements
 
