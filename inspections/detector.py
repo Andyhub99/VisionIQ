@@ -18,15 +18,14 @@ def _load():
 
         path = Path(settings.BASE_DIR) / settings.MODEL_PATH
 
-        if path.exists():
-            _model = YOLO(str(path))
-            _model_name = path.name
-        else:
-            _model = YOLO(settings.FALLBACK_MODEL)
-            _model_name = (
-                settings.FALLBACK_MODEL
-                + " (generic COCO - NOT defect-trained)"
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"Trained defect model not found: {path}. "
+                "Set MODEL_PATH to the trained model file."
             )
+
+        _model = YOLO(str(path))
+        _model_name = path.name
 
     return _model, _model_name
 

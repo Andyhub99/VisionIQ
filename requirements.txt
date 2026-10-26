@@ -10,3 +10,5 @@ gunicorn>=22.0
 dj-database-url>=2.1
 pytest>=8.0
 pytest-django>=4.8
+
+psycopg2-binary>=2.9.9
